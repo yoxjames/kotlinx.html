@@ -2,9 +2,12 @@ package kotlinx.html.dom
 
 import kotlinx.html.DefaultUnsafe
 import kotlinx.html.Entities
+import kotlinx.html.FlowContent
+import kotlinx.html.InteroperableTagConsumer
 import kotlinx.html.Tag
 import kotlinx.html.TagConsumer
 import kotlinx.html.Unsafe
+import kotlinx.html.consumers.FinalizeConsumer
 import kotlinx.html.consumers.onFinalize
 import kotlinx.html.org.w3c.dom.events.Event
 import org.w3c.dom.Document
@@ -21,7 +24,7 @@ private inline fun Element.setEvent(name: String, noinline callback: (Event) -> 
     addEventListener(eventName, callback)
 }
 
-class JSDOMBuilder<out R : HTMLElement>(val document: Document) : TagConsumer<R> {
+class JSDOMBuilder<out R : HTMLElement>(val document: Document) : InteroperableTagConsumer<Node, R> {
     private val path = arrayListOf<Element>()
     private var lastLeaved: Element? = null
 
@@ -117,10 +120,26 @@ class JSDOMBuilder<out R : HTMLElement>(val document: Document) : TagConsumer<R>
     override fun finalize(): R =
         lastLeaved?.asR() ?: throw IllegalStateException("We can't finalize as there was no tags")
 
+    override fun onRenderedContent(content: Node) {
+        path.last().appendChild(content)
+    }
+
     private inline fun Element.asR(): R {
         return jsCast(this)
     }
 
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun FlowContent.dom(crossinline block: () -> Node) {
+    contract { callsInPlace(block, InvocationKind.AT_MOST_ONCE) }
+    val consumer = when (val topConsumer = consumer) {
+        is FinalizeConsumer<*,*> -> topConsumer.downstream
+        else -> null
+    }
+    if (consumer is JSDOMBuilder) {
+        consumer.onRenderedContent(block())
+    }
 }
 
 fun <T : JsAny> jsCast(any: JsAny): T = js("(any)")

@@ -1,6 +1,9 @@
 package kotlinx.html
 
 import kotlinx.html.org.w3c.dom.events.Event
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 interface TagConsumer<out R> {
     fun onTagStart(tag: Tag)
@@ -12,6 +15,10 @@ interface TagConsumer<out R> {
     fun onTagContentUnsafe(block: Unsafe.() -> Unit)
     fun onTagComment(content: CharSequence)
     fun finalize(): R
+}
+
+interface InteroperableTagConsumer<I, out R> : TagConsumer<R> {
+    fun onRenderedContent(content: I)
 }
 
 @HtmlTagMarker
