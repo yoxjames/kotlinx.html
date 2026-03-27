@@ -1,6 +1,7 @@
 package kotlinx.html.dom
 
 import kotlinx.html.Entities
+import kotlinx.html.ExperimentalKotlinxHtmlApi
 import kotlinx.html.Tag
 import kotlinx.html.TagConsumer
 import kotlinx.html.Unsafe
@@ -99,6 +100,9 @@ class HTMLDOMBuilder(val document : Document) : TagConsumer<Element> {
     }
 
     override fun finalize() = lastLeaved ?: throw IllegalStateException("No tags were emitted")
+
+    @ExperimentalKotlinxHtmlApi
+    override val last: Any? get() = path.lastOrNull()
 
     override fun onTagContentUnsafe(block: Unsafe.() -> Unit) {
         UnsafeImpl.block()

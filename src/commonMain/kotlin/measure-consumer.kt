@@ -41,6 +41,9 @@ private class TimeMeasureConsumer<R>(val downstream: TagConsumer<R>, val start: 
     }
 
     override fun finalize(): TimedValue<R> = TimedValue(downstream.finalize(), start.elapsedNow())
+
+    @ExperimentalKotlinxHtmlApi
+    override val last: Any? get() = downstream.last
 }
 
 fun <R> TagConsumer<R>.measureTime(timeSource: TimeSource = TimeSource.Monotonic): TagConsumer<TimedValue<R>> = TimeMeasureConsumer(this, timeSource.markNow())

@@ -1,16 +1,20 @@
 import kotlinx.browser.document
+import kotlinx.html.ExperimentalKotlinxHtmlApi
+import kotlinx.html.Tag
 import kotlinx.html.js.div
 import kotlinx.html.dom.append
-import kotlinx.html.dom.dom
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.Node
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalKotlinxHtmlApi::class)
 class InteroperableImplTest {
     @Test fun testInteroperableDOM() {
         val wrapper = wrapper()
 
         wrapper.append.div {
-            dom {
+            interop {
                 document.createElement("svg")
             }
         }
@@ -19,4 +23,10 @@ class InteroperableImplTest {
     }
 
     private fun wrapper() = document.body!!.append.div {}
+
+    // Stand in for how a library might want to interop with kotlinx-html
+    private fun Tag.interop(block: () -> Node) {
+        val last = consumer.last as HTMLElement
+        last.appendChild(block())
+    }
 }
