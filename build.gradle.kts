@@ -90,7 +90,7 @@ kotlin {
         browser {
             testTask {
                 useKarma {
-                    useFirefox()
+                    useChromeHeadless()
                 }
             }
         }
@@ -102,13 +102,7 @@ kotlin {
     }
     wasmJs {
         moduleName = project.name
-        browser {
-            testTask {
-                useKarma {
-                    useFirefox()
-                }
-            }
-        }
+        browser()
 
         mavenPublication {
             groupId = group as String

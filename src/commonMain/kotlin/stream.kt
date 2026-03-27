@@ -89,7 +89,6 @@ class HTMLStreamBuilder<out O : Appendable>(
     @ExperimentalKotlinxHtmlApi
     override val last: Any? get() = out
 
-
     override fun onTagContentUnsafe(block: Unsafe.() -> Unit) {
         UnsafeImpl.block()
     }
