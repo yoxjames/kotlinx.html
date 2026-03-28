@@ -13,7 +13,7 @@ interface TagConsumer<out R> {
     fun onTagComment(content: CharSequence)
     fun finalize(): R
     @ExperimentalKotlinxHtmlApi
-    val last: Any?
+    val head: Any?
 }
 
 @RequiresOptIn

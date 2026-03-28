@@ -49,7 +49,7 @@ class DelayedConsumer<T>(val downstream: TagConsumer<T>) : TagConsumer<T> {
     }
 
     @ExperimentalKotlinxHtmlApi
-    override val last: Any? get() = downstream.last
+    override val head: Any? get() = downstream.head
 
     override fun onTagContentUnsafe(block: Unsafe.() -> Unit) {
         processDelayedTag()

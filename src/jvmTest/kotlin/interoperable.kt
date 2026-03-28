@@ -24,7 +24,7 @@ class InteroperableImplTest {
 
     // Stand in for how a library might want to interop with kotlinx-html
     private fun Tag.interop(block: (Document) -> Node) {
-        val last = consumer.last as Element
+        val last = consumer.head as Element
         last.appendChild(block(last.ownerDocument))
     }
 }

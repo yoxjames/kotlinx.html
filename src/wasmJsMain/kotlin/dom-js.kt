@@ -119,7 +119,7 @@ class JSDOMBuilder<out R : HTMLElement>(val document: Document) : TagConsumer<R>
         lastLeaved?.asR() ?: throw IllegalStateException("We can't finalize as there was no tags")
 
     @ExperimentalKotlinxHtmlApi
-    override val last: Any? get() = path.lastOrNull()
+    override val head: Element get() = path.last()
 
     private inline fun Element.asR(): R {
         return jsCast(this)

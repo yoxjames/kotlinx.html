@@ -115,7 +115,7 @@ class JSDOMBuilder<out R : HTMLElement>(val document : Document) : TagConsumer<R
     override fun finalize(): R = lastLeaved?.asR() ?: throw IllegalStateException("We can't finalize as there was no tags")
 
     @ExperimentalKotlinxHtmlApi
-    override val last: Any? get() = path.lastOrNull()
+    override val head: HTMLElement get() = path.last()
 
     @Suppress("UnsafeCastFromDynamic")
     private fun HTMLElement.asR(): R = this.asDynamic()

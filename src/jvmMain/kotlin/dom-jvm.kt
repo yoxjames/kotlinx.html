@@ -102,7 +102,7 @@ class HTMLDOMBuilder(val document : Document) : TagConsumer<Element> {
     override fun finalize() = lastLeaved ?: throw IllegalStateException("No tags were emitted")
 
     @ExperimentalKotlinxHtmlApi
-    override val last: Any? get() = path.lastOrNull()
+    override val head: Element get() = path.last()
 
     override fun onTagContentUnsafe(block: Unsafe.() -> Unit) {
         UnsafeImpl.block()
